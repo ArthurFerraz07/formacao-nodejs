@@ -1,0 +1,22 @@
+{
+  "name": "formacao-nodejs",
+  "version": "1.0.0",
+  "description": "Curso udemy https://www.udemy.com/course/formacao-nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArthurFerraz07/formacao-nodejs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArthurFerraz07/formacao-nodejs/issues"
+  },
+  "homepage": "https://github.com/ArthurFerraz07/formacao-nodejs#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
