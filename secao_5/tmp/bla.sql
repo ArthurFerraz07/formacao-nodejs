@@ -1,0 +1,3 @@
+-- SELECT * FROM asks;
+
+SHOW TABLES;
