@@ -4,15 +4,12 @@ const connection = require('./database/database')
 
 // Database config
 connection.authenticate()
-          .then(() => {
-            console.log('DB connected!')
-          }).catch((error) => {
-            throw new Error(error);
-          });
+          .then(() => console.log('DB connected!'))
+          .catch((error) => { throw new Error(error); });
 
 // Parser for requests with body
 app.use(express.urlencoded({extended: false}));
-app.use(express.json()); 
+app.use(express.json());
 
 // Use EJS as view engine
 app.set('view engine', 'ejs');
