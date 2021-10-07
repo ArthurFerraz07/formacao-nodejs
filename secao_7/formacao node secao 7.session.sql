@@ -3,4 +3,8 @@
 -- WHERE schemaname != 'pg_catalog' AND 
 --     schemaname != 'information_schema';
 
-DROP TABLE categories;
+-- DROP TABLE categories;
+
+
+SHOW TABLES;
+

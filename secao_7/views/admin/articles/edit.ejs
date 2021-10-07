@@ -1,0 +1,19 @@
+<%- include('../../partials/header.ejs') %>
+<%- include('../../partials/navbar.ejs') %>
+<body>
+  <div class="conteiner">
+    <div class="card">
+      <div class="card-header">
+        <h2>Edição de artigo</h2>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="../update/<%= article.id %>" class="form-control">
+          <input type="text" class="from-control" name="title" placeholder="Defina o título do artigo" value="<%= article.title %>">
+          <br /><br />
+          <button class="btn btn-success">Editar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+<%- include('../../partials/footer.ejs') %>
