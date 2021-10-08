@@ -1,3 +1,4 @@
 dropdb formacao_node_secao_7;
 createdb formacao_node_secao_7;
 node scripts/sync_database.js
+node scripts/initial_seed.js

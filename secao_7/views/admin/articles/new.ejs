@@ -1,5 +1,5 @@
 <%- include('../../partials/header.ejs') %>
-<%- include('../../partials/navbar.ejs') %>
+<%- include('../../partials/admin/navbar.ejs') %>
 <body>
   <div class="conteiner">
     <div class="card">
@@ -8,7 +8,16 @@
       </div>
       <div class="card-body">
         <form method="POST" action="create" class="form-control">
+          <select class="form-control" name="categoryId">
+            <option>Selecione uma Categoria</option>
+            <% categories.forEach(category => { %>
+              <option value="<%= category.id %>"><%= category.title %></option>
+            <% }) %>
+          </select>
+          <br /><br />
           <input type="text" class="from-control" name="title" placeholder="Defina o título do artigo">
+          <br /><br />
+          <textarea class="form-control" name="body" id="articleBody" rows="30"></textarea>
           <br /><br />
           <button class="btn btn-success">Criar</button>
         </form>
@@ -16,5 +25,11 @@
     </div>
   </div>
 </body>
-
+<script src="/tinymce/tinymce.min.js"></script>
+<script>
+  tinymce.init({
+    selector: '#articleBody',
+    plugins: ['advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons']
+  });
+</script>
 <%- include('../../partials/footer.ejs') %>
