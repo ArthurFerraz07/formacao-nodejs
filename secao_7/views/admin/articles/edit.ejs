@@ -7,13 +7,32 @@
         <h2>Edição de artigo</h2>
       </div>
       <div class="card-body">
-        <form method="POST" action="../update/<%= article.id %>" class="form-control">
+        <form method="POST" action="update" class="form-control">
+          <select class="form-control" name="categoryId">
+            <option>Selecione uma Categoria</option>
+            <% categories.forEach(category => { %>
+              <option value="<%= category.id %>" <%= category.id == article.categoryId ? 'selected' : '' %>><%= category.title %></option>
+            <% }) %>
+          </select>
+          <br /><br />
           <input type="text" class="from-control" name="title" placeholder="Defina o título do artigo" value="<%= article.title %>">
           <br /><br />
-          <button class="btn btn-success">Editar</button>
+          <textarea class="form-control" name="body" id="articleBody" rows="30" onLoad="insertArticleBody('teste')"><%= article.body %></textarea>
+          <br /><br />
+          <button class="btn btn-success">Salvar</button>
         </form>
       </div>
     </div>
   </div>
 </body>
+<script src="/tinymce/tinymce.min.js"></script>
+<script>
+  tinymce.init({
+    selector: '#articleBody',
+    plugins: ['advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons']
+  });
+</script>
+
+
+
 <%- include('../../partials/footer.ejs') %>

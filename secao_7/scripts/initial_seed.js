@@ -7,8 +7,15 @@ const Article = require('./../articles/Article');
   'Python',
   'SQL'
 ].forEach(categoryTitle => {
-  category = Category.build({
+  Category.create({
     title: categoryTitle
-  })
-  category.save();
+  }).then(category => {
+    for(var i = 0; i < 10; i++){
+      Article.create({
+        categoryId: category.id,
+        title: `Artigo de ${category.title} #${i + 1}`,
+        body: `<p>Parágrafo 1</p><p>Parágrafo 2</p><p>Parágrafo 3</p>`
+      });
+    };
+  });
 });

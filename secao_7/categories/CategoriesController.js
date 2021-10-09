@@ -29,7 +29,7 @@ router.post('/admin/categories/delete', (req, res) => {
   }
 });
 
-router.get('/admin/categories/edit/:id', (req, res) => {
+router.get('/admin/categories/:id/edit', (req, res) => {
   if(isNaN(req.params.id)){
     res.redirect('/admin/categories');
   }

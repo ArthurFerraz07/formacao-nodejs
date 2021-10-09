@@ -18,15 +18,16 @@ router.get('/articles', (req, res) => {
       res.render('articles/index', { articles: articles, categories: categories });
     });
   });
-})
-
+});
 
 router.get('/articles/:id', (req, res) => {
   Article.findOne({
     where: { slug: req.params.id },
     include: [{ model: Category }]
   }).then(article => {
-    res.render('articles/show', { article: article });
+    Category.findAll().then(categories => {
+      res.render('articles/show', { article: article, categories: categories });
+    });
    });
 });
 
@@ -59,10 +60,28 @@ router.post('/admin/articles/delete', (req, res) => {
   }
 });
 
+router.get('/admin/articles/:id/edit', (req, res) => {
+  Article.findByPk(req.params.id).then(article => {
+    Category.findAll().then( categories => {
+      res.render('admin/articles/edit', { article: article, categories: categories});
+    })
+  });
+});
+
 router.get('/admin/articles/new', (req, res) => {
   Category.findAll().then( categories => {
     res.render('admin/articles/new', { categories: categories });
   })
+});
+
+router.post('/admin/articles/:id/update', (req, res) => {
+  Article.findByPk(req.params.id).then(article => {
+    article.update({
+      categoryId: req.body.categoryId,
+      title: req.body.title,
+      body: req.body.body
+    }).then(() => res.redirect('/admin/articles'));
+  });
 });
 
 module.exports = router;
