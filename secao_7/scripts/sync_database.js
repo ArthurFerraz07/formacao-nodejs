@@ -4,3 +4,5 @@ Category.sync({ force: true }).then(() => {
   Article.sync({ force: true });
 });
 
+const Admin = require('./../admins/Admin');
+Admin.sync({ force: true })

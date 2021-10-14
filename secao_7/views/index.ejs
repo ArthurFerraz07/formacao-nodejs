@@ -13,6 +13,16 @@
       </div>
     </div>
     <br />
-  <% }); %> 
+  <% }); %>
+  <div class="row">
+    <div class="col col-12">
+      <% if(has_previous){ %>
+        <a style="float: left;" href="/?page=<%= current_page - 1%>&page=<%= per_page %>"><<< Previous</a>
+      <% } %>
+      <% if(has_next){ %>
+        <a style="float: right;" href="/?page=<%= current_page + 1%>&page=<%= per_page %>">Next >>></a>
+      <% } %>
+    </div>
+  </div> 
 </div>
 <%- include('./partials/footer.ejs') %>

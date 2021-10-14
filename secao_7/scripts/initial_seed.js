@@ -1,5 +1,6 @@
 const Category = require('./../categories/Category');
 const Article = require('./../articles/Article');
+const Admin = require('./../admins/Admin');
 
 [
   'Javascript',
@@ -19,3 +20,9 @@ const Article = require('./../articles/Article');
     };
   });
 });
+
+Admin.create({
+  email: 'admin@example.com',
+  password: '123456'
+});
+
