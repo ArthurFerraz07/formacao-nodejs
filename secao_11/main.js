@@ -1,25 +1,36 @@
-const fs = require('fs');
-const Parser = require('./csvParser');
 const HTMLGenerator = require('./HTMLGenerator');
+const fs = require('fs').promises;
+const Parser = require('./CsvParser');
 
-function csvData(filename) {
-  fs.createReadStream(`${__dirname}/${filename}.csv`).pipe(Parser);
+async function csvData(filename) {
+  const fileData = await fs.readFile(`./${filename}.csv`);
+
+  return Parser(fileData, { columns: true });
 };
 
-console.log(csvData('users'));
+async function getRecords(){
+  const records = await csvData('users');
 
+  return records;
+};
 
-const headers = ['id', 'nome']
-const records = [
-  {
-    id: 1,
-    nome: 'Nome1'
-  },
-  {
-    id: 2,
-    nome: 'Nome2'
-  }
-]
+async function getHTML(){
+  var records = await getRecords();
+  var rawHTML = await HTMLGenerator(records, Object.keys(records[0]));
 
+  return rawHTML;
+};
 
+async function writeHTML(filename){
+  var rawHTML = await getHTML();
 
+  fs.writeFile(`./${filename}.html`, rawHTML)
+    .then(() => {
+      console.log('Deu bom!');
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+writeHTML('users')

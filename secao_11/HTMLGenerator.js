@@ -21,7 +21,7 @@ function tbody(records, headers){
   return rawHTML;
 }
 
-function HTMLGenerator(records, headers){
+async function HTMLGenerator(records, headers){
   return `
     <!DOCTYPE html>
     <html lang="en">
