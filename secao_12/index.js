@@ -42,9 +42,6 @@ function populateDB(){
   for(i = 1; i <= RECORDS_NUMBER; i++){
     var user = buildUser(`User${i}`, `user${i}@emails.com`)
     user = saveRecord('users', user);
-    
-    var post = buildPost(user.id, `Lorem Ipsum Dolor ${i}`);
-    post = saveRecord('posts', post);
   };
 }
 
