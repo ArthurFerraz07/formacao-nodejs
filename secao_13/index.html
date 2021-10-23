@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+  </head>
+
+  <body>
+    <hr>
+    <div id="userIndex">
+      <h1>Users list</h1>
+      <ul id="usersList"></ul>
+    </div>
+
+    <hr>
+    <div id="userFormDiv">
+      <form action="" id="userForm" onSubmit="createUser(event, this)">
+        <label for="userName">Nome: </label>
+        <input type="text" name="name" id="userName">
+        <label for="userEmail">Email: </label>
+        <input type="email" name="email" id="userEmail">
+        <input type="submit" id="userSubmit" value="Criar">
+      </form>
+      <br />
+      <ul id="userSubmitErrors"></ul>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    function appendUser(user){
+      var usersList = document.getElementById('usersList');
+      var userLi = document.createElement('li');
+
+      userLi.innerHTML = user.name;
+      userLi.setAttribute('id', `userLi${user.id}`);
+      userLi.setAttribute('data-id', user.id);
+      userLi.setAttribute('data-name', user.name);
+      userLi.setAttribute('data-email', user.email);
+      userLi.setAttribute('style', 'margin: 5px;');
+
+      var deleteButton = document.createElement('button');
+
+      deleteButton.innerHTML = 'Apagar'
+      deleteButton.setAttribute('id', `deleteUser${user.id}`);
+      deleteButton.setAttribute('data-id', user.id);
+      deleteButton.setAttribute('onClick', 'deleteUser(event, this)');
+      deleteButton.setAttribute('style', 'margin: 5px;');      
+
+      userLi.appendChild(deleteButton);
+
+      var editButton = document.createElement('button');
+
+      editButton.innerHTML = 'Editar'
+      editButton.setAttribute('id', `editUser${user.id}`);
+      editButton.setAttribute('data-id', user.id);
+      editButton.setAttribute('onClick', 'editUser(event, this)');
+      editButton.setAttribute('style', 'margin: 5px;');      
+
+      userLi.appendChild(editButton);
+
+      usersList.appendChild(userLi);
+    }
+
+    function showSubmitError(error){
+      var userSubmitErrorsList = document.getElementById('userSubmitErrors');
+      var userLi = document.createElement('li');
+
+      while(userSubmitErrorsList.firstChild){ userSubmitErrorsList.removeChild(userSubmitErrorsList.firstChild) }
+
+      userLi.innerHTML = error;
+      userSubmitErrorsList.appendChild(userLi);
+    }
+
+    async function getUsers(){
+      var usersList = document.getElementById('usersList');
+
+      while(usersList.firstChild){ usersList.removeChild(usersList.firstChild) }
+
+      axios.get('http://localhost:3001/users').then(res => {
+        res.data.forEach(user => appendUser(user));
+      }).catch(err => console.log(err));
+    }
+
+    function createUser(event, form){
+      event.preventDefault();
+
+      var userData = {
+        name: document.getElementById('userName').value,
+        email: document.getElementById('userEmail').value
+      }
+
+      axios.post('http://localhost:3001/users', userData).then(res => {
+        appendUser(res.data);
+      }).catch(err => {
+        showSubmitError(err.response.data.error);
+      });
+    }
+
+    function deleteUser(event, button){
+      const id = button.getAttribute('data-id');
+
+      axios.delete(`http://localhost:3001/users/${id}`).then(res => {
+        getUsers();
+      }).catch(err => {
+        showDeleteError(id, err);
+      });
+    }
+
+    function showDeleteError(id, err){
+      var userLi = document.getElementById(`userLi${id}`);
+      var errorSpan = document.createElement('span');
+
+      errorSpan.innerHTML = err;
+      userLi?.appendChild(errorSpan);
+    }
+
+    async function editUser(event, button){
+      const id = button.getAttribute('data-id');
+      var userFormDiv = document.getElementById('userFormDiv');
+      var userForm = document.getElementById('userForm');
+      var userFormButton = document.getElementById('userSubmit');
+      var editingSpan = document.createElement('span');
+      var cancelEditButton = document.createElement('button');      
+      var user = (await axios.get(`http://localhost:3001/users/${id}`)).data
+      var userNameInput = document.getElementById('userName');
+      var userEmailInput = document.getElementById('userEmail');
+
+      // Add label
+      editingSpan.innerHTML = `Editando ${user.name}`
+      editingSpan.setAttribute('id', 'editingSpan')
+      userFormDiv.insertAdjacentHTML('afterbegin', editingSpan.outerHTML);
+
+      // Change submit
+      userForm.setAttribute('onSubmit', `updateUser(event, this, ${id})`);
+      userFormButton.setAttribute('value', 'Editar');
+
+      // Cancel edit button
+      cancelEditButton.innerHTML = 'Cancelar';
+      cancelEditButton.setAttribute('id', 'userCancelEdit');
+      cancelEditButton.setAttribute('onClick', 'resetUserForm()');
+      userForm.appendChild(cancelEditButton);
+
+      // Fill inputs
+      userNameInput.setAttribute('value', user.name);
+      userEmailInput.setAttribute('value', user.email);
+    }
+    
+    function updateUser(event, form, id){
+      event.preventDefault();
+
+      var userData = {
+        name: document.getElementById('userName').value,
+        email: document.getElementById('userEmail').value
+      }
+
+      axios.put(`http://localhost:3001/users/${id}`, userData).then(res => {
+        getUsers();
+        resetUserForm();
+      }).catch(err => {
+        showSubmitError(err.response.data.error);
+      });
+    }
+    
+    function resetUserForm(){
+      var userForm = document.getElementById('userForm');
+      var userFormButton = document.getElementById('userSubmit');
+      var userCancelEditButton = document.getElementById('userCancelEdit');
+      var userNameInput = document.getElementById('userName');
+      var userEmailInput = document.getElementById('userEmail');
+      var editingSpan = document.getElementById('editingSpan');
+
+      userForm.setAttribute('onSubmit', 'createUser(event, this)');
+      userFormButton.setAttribute('value', 'Criar');
+      userCancelEditButton?.remove();
+      editingSpan?.remove();
+
+      userNameInput.setAttribute('value', '');
+      userNameInput.value = '';
+      userEmailInput.setAttribute('value', '');
+      userEmailInput.value = '';
+    }
+
+    getUsers();
+  </script>
+</html>

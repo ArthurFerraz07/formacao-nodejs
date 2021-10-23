@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
+const cors = require('cors'); 
 const bodyParser = require('body-parser');
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -11,8 +14,10 @@ var i;
 var DB = {};
 
 function buildUser(name, email){
-  if(!name){ throw 'Missing name' }
-  if(!email){ throw 'Missing email' }
+  var errors = [];
+  if(!name){ errors.push('Missing name') }
+  if(!email){ errors.push('Missing email') }
+  if(errors.length){ throw errors.join(', ') }
 
   return({
     name: name,
@@ -21,8 +26,10 @@ function buildUser(name, email){
 }
 
 function buildPost(userId, content){
-  if(!userId){ throw 'Missing userId' }
-  if(!content){ throw 'Missing content' }
+  var errors = [];
+  if(!userId){ errors.push('Missing userId') }
+  if(!content){ errors.push('Missing content') }
+  if(errors.length){ throw errors.join(', ') }
 
   return({
     userId,
@@ -56,7 +63,7 @@ function indexById(records, id){
 function badRequest(res, error = nil){
   res.statusCode = 400;
   res.json({
-    error: 'Bad request' || error
+    error: error || 'Bad request' 
   });
 }
 
